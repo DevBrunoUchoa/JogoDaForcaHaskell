@@ -1,0 +1,37 @@
+cabal-version:      3.4
+
+-- Nome do pacote
+name:               JogoDaForcaHaskell
+
+-- Versão do pacote
+version:            0.1.0.0
+
+-- Tipo de build
+build-type:         Simple
+
+-- Arquivos extras de documentação
+extra-doc-files:    CHANGELOG.md
+
+-- Configurações comuns de avisos do compilador
+common warnings
+    ghc-options: -Wall 
+
+executable JogoDaForcaHaskell
+    -- Importa os avisos definidos acima
+    import:           warnings
+
+    -- Arquivo principal do executável
+    main-is:          Main.hs
+
+    -- Outros módulos usados pelo Main (Logica e Arquivo)
+    -- É boa prática listar, embora o Cabal consiga encontrar se estiverem na mesma pasta
+    other-modules:    Logica, Arquivo
+
+    -- Bibliotecas necessárias (base e random para números aleatórios)
+    build-depends:    base >=4.17 && <5, random
+
+    -- Pasta onde estão os códigos fonte (.hs)
+    hs-source-dirs:   app
+
+    -- Versão da linguagem Haskell utilizada
+    default-language: GHC2021
