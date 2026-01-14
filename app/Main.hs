@@ -15,12 +15,36 @@ menuPrincipal :: IO ()
 menuPrincipal = do
     putStrLn "\n=== JOGO DA FORCA ==="
     putStrLn "1. Jogar"
-    putStrLn "2. Sair"
+    putStrLn "2. Instruções"
+    putStrLn "3. Sair"
     putStr "Escolha: "
     opcao <- getLine
-    if opcao == "1"
-        then menuDificuldade
-        else putStrLn "Saindo..."
+    case opcao of
+        "1" -> menuDificuldade
+        "2" -> do 
+            exibirInstrucoes
+            menuPrincipal -- Volta para o menu após ler
+        "3" -> putStrLn "Saindo..."
+        _   -> do
+            putStrLn "Opção inválida!"
+            menuPrincipal
+
+-- Função para exibir as regras
+exibirInstrucoes :: IO ()
+exibirInstrucoes = do
+    putStrLn "\n============================================"
+    putStrLn "           REGRAS E INSTRUÇÕES"
+    putStrLn "============================================"
+    putStrLn "1. O objetivo é adivinhar a palavra secreta."
+    putStrLn "2. A cada rodada, digite uma letra."
+    putStrLn "3. Se a letra estiver na palavra, ela será revelada."
+    putStrLn "4. Se errar, uma parte do corpo será desenhada."
+    putStrLn "5. No modo FÁCIL, você tem 7 chances."
+    putStrLn "6. No modo DIFÍCIL, você tem 5 chances."
+    putStrLn "============================================\n"
+    putStrLn "Pressione Enter para voltar ao menu..."
+    _ <- getLine -- Espera o usuário apertar Enter
+    return ()
 
 menuDificuldade :: IO ()
 menuDificuldade = do
