@@ -2,11 +2,11 @@
 Primeira Parte do Projeto para a Disciplina de Paradigmas Das Linguagens de Programação (2025.2). Jogo da Forca utilizando o paradigma funcional na Linguagem Haskell.
 
 ## Equipe
-Ana Larissa Costa dos Santos
-João Bruno Tavares Uchoa
-Nathan Amaro Trajano
-Raissa Tainá Pordeus Ferreira
-Teones Alex Lira de Farias Filho
+* Ana Larissa Costa dos Santos
+* João Bruno Tavares Uchoa
+* Nathan Amaro Trajano
+* Raissa Tainá Pordeus Ferreira
+* Teones Alex Lira de Farias Filho
 
 ## 🚀 Como Rodar o Projeto
 
