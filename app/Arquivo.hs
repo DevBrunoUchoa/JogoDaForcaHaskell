@@ -1,7 +1,5 @@
 module Arquivo where
 
-import System.IO
-
 -- Função auxiliar que quebra uma string quando encontra uma vírgula
 quebrarVirgula :: String -> (String, String)
 quebrarVirgula linha = 
