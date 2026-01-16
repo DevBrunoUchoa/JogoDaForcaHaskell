@@ -2,7 +2,7 @@ module Main where
 
 import System.IO
 import System.Random (randomRIO)
-import Data.Char (isLetter)
+import Data.Char (isLetter, toUpper)
 
 import EstadoJogo
 import Logica
@@ -16,23 +16,28 @@ main = do
 menuPrincipal :: IO ()
 menuPrincipal = do
     putStrLn "\n=== JOGO DA FORCA ==="
-    putStrLn "1. Jogar"
-    putStrLn "2. Instruções"
-    putStrLn "3. Sair"
+    putStrLn "1. Jogar (Solo)"
+    putStrLn "2. Instrucoes"
+    putStrLn "3. Modo Multijogador"
+    putStrLn "4. Sair"
     putStr "Escolha: "
     opcao <- getLine
     case opcao of
         "1" -> menuDificuldade
         "2" -> do
-		exibirInstrucoes
-		menuPrincipal
-        "3" -> putStrLn "Saindo..."
+            exibirInstrucoes
+            menuPrincipal
+        "3" -> menuMultijogador
+        "4" -> putStrLn "Saindo..."
+        _   -> do
+            putStrLn "Opcao invalida! Tente novamente."
+            menuPrincipal
 
 -- Função para exibir as regras
 exibirInstrucoes :: IO ()
 exibirInstrucoes = do
    putStrLn "\n========================================"
-   putStrLn "		REGRAS E INSTRUÇÕES"
+   putStrLn "       REGRAS E INSTRUÇÕES"
    putStrLn "========================================"
    putStrLn "1. O objetivo é adivinhar a palavra secreta."
    putStrLn "2. A cada rodada, digite uma letra."
@@ -94,3 +99,34 @@ loopJogo estado = do
                             loopJogo estado
                         | otherwise ->
                             loopJogo (processarJogada letra estado)
+
+-- === LOGICA DO MODO MULTIJOGADOR ===
+menuMultijogador :: IO ()
+menuMultijogador = do
+    putStrLn "\n=== MODO MULTIJOGADOR ==="
+    putStrLn "JOGADOR 1: Digite a palavra secreta (sem que o Jogador 2 veja):"
+    entrada <- getLine
+    
+    let palavra = map toUpper entrada
+    
+    -- "Limpa" a tela pulando 50 linhas para esconder a palavra
+    putStrLn (replicate 50 '\n') 
+
+    putStrLn "JOGADOR 1: Escolha a dificuldade para o JOGADOR 2:"
+    putStrLn "1. Facil (7 erros)"
+    putStrLn "2. Dificil (5 erros)"
+    putStr "Escolha: "
+    op <- getLine
+
+    case op of
+        "1" -> iniciarJogoCustomizado palavra 7
+        "2" -> iniciarJogoCustomizado palavra 5
+        _   -> do
+            putStrLn "Opcao invalida! Tente novamente."
+            menuMultijogador
+
+iniciarJogoCustomizado :: String -> Int -> IO ()
+iniciarJogoCustomizado palavra maxE = do
+    putStrLn "\n--- JOGO INICIADO ---"
+    putStrLn "JOGADOR 2: Tente adivinhar a palavra!"
+    loopJogo (estadoInicial palavra maxE)
