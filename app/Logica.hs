@@ -1,33 +1,45 @@
 module Logica where
 
-import Data.Char (toUpper)
 import EstadoJogo
+import Normalizacao
 
 temLetra :: Char -> String -> Bool
 temLetra letra palavra =
-    letra `elem` palavra
+    normalizarChar letra `elem` normalizarString palavra
 
 mostrarPainel :: String -> [Char] -> String
 mostrarPainel palavra letrasDescobertas =
-    [ if x `elem` letrasDescobertas then x else '_' | x <- palavra ]
+    [ if normalizarChar x `elem` map normalizarChar letrasDescobertas
+        then x
+        else '_'
+    | x <- palavra
+    ]
 
 verificarVitoria :: EstadoJogo -> Bool
 verificarVitoria estado =
-    all (`elem` letrasUsadas estado) (palavraSecreta estado)
+    all (`elem` letrasNorm)
+        palavraNorm
+  where
+    palavraNorm = normalizarString (palavraSecreta estado)
+    letrasNorm  = map normalizarChar (letrasUsadas estado)
 
 tratarEntrada :: String -> Maybe Char
 tratarEntrada []    = Nothing
-tratarEntrada (c:_) = Just (toUpper c)
+tratarEntrada (c:_) = Just (normalizarChar c)
 
 processarJogada :: Char -> EstadoJogo -> EstadoJogo
 processarJogada letra estado
-    | letra `elem` letrasUsadas estado = estado
-    | temLetra letra (palavraSecreta estado) =
+    | letraNorm `elem` letrasNorm = estado
+    | letraNorm `elem` palavraNorm =
         estado { letrasUsadas = letra : letrasUsadas estado }
     | otherwise =
         estado { letrasUsadas = letra : letrasUsadas estado
                , erros = erros estado + 1
                }
+  where
+    letraNorm   = normalizarChar letra
+    letrasNorm  = map normalizarChar (letrasUsadas estado)
+    palavraNorm = normalizarString (palavraSecreta estado)
 
 jogoPerdido :: EstadoJogo -> Bool
 jogoPerdido estado =
