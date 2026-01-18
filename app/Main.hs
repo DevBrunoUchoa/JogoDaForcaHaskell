@@ -89,16 +89,23 @@ loopJogo estado = do
             else do
                 putStr "\nDigite uma letra: "
                 entrada <- getLine
-                case tratarEntrada entrada of
-                    Nothing ->
+                if length entrada /= 1
+                    then do
+                        if not (all isLetter entrada)
+                            then putStrLn "\n>> Digite apenas letras!"
+                            else putStrLn "\n>> Digite apenas UMA letra!"
                         loopJogo estado
+                    else
+                        case tratarEntrada entrada of
+                            Nothing ->
+                                loopJogo estado
 
-                    Just letra
-                        | not (isLetter letra) -> do
-                            putStrLn ">> Digite apenas letras!"
-                            loopJogo estado
-                        | otherwise ->
-                            loopJogo (processarJogada letra estado)
+                            Just letra
+                                | not (isLetter letra) -> do
+                                    putStrLn "\n>> Digite apenas letras!"
+                                    loopJogo estado
+                                | otherwise ->
+                                    loopJogo (processarJogada letra estado)
 
 -- === LOGICA DO MODO MULTIJOGADOR ===
 menuMultijogador :: IO ()
