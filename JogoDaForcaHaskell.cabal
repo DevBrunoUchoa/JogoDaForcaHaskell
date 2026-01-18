@@ -25,7 +25,7 @@ executable JogoDaForcaHaskell
 
     -- Outros módulos usados pelo Main (Logica e Arquivo)
     -- É boa prática listar, embora o Cabal consiga encontrar se estiverem na mesma pasta
-    other-modules:    EstadoJogo, Logica, Arquivo
+    other-modules:    EstadoJogo, Logica, Arquivo, Normalizacao
 
     -- Bibliotecas necessárias (base e random para números aleatórios)
     build-depends:    base >=4.17 && <5, random
