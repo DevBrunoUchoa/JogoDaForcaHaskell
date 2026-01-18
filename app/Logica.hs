@@ -2,6 +2,13 @@ module Logica where
 
 import EstadoJogo
 import Normalizacao
+import Data.Char (isLetter)
+
+
+data ResultadoEntrada
+    = EntradaInvalida String
+    | JogadaValida Char
+    | IgnorarEntrada
 
 temLetra :: Char -> String -> Bool
 temLetra letra palavra =
@@ -23,6 +30,18 @@ verificarVitoria estado =
     palavraNorm = normalizarString (palavraSecreta estado)
     letrasNorm  = map normalizarChar (letrasUsadas estado)
 
+jogoPerdido :: EstadoJogo -> Bool
+jogoPerdido estado =
+    erros estado >= maxErros estado
+
+data StatusJogo = Venceu | Perdido | EmAndamento
+
+statusJogo :: EstadoJogo -> StatusJogo
+statusJogo estado
+    | jogoPerdido estado      = Perdido
+    | verificarVitoria estado = Venceu
+    | otherwise               = EmAndamento
+
 tratarEntrada :: String -> Maybe Char
 tratarEntrada []    = Nothing
 tratarEntrada (c:_) = Just (normalizarChar c)
@@ -41,9 +60,20 @@ processarJogada letra estado
     letrasNorm  = map normalizarChar (letrasUsadas estado)
     palavraNorm = normalizarString (palavraSecreta estado)
 
-jogoPerdido :: EstadoJogo -> Bool
-jogoPerdido estado =
-    erros estado >= maxErros estado
+avaliarEntrada :: String -> ResultadoEntrada
+avaliarEntrada entrada
+    | length entrada > 1 && all isLetter entrada =
+        EntradaInvalida "\n>> Digite apenas UMA letra!"
+    | entradaInvalida entrada =
+        EntradaInvalida "\n>> Digite apenas letras"
+    | otherwise =
+        maybe IgnorarEntrada JogadaValida (tratarEntrada entrada)
+
+
+entradaInvalida :: String -> Bool
+entradaInvalida entrada =
+    null entrada || not (all isLetter entrada)
+
 
 desenhoForca :: Int -> String
 desenhoForca erros = case erros of
