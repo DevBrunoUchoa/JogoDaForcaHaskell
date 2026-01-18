@@ -2,7 +2,7 @@ module Main where
 
 import System.IO
 import System.Random (randomRIO)
-import Data.Char (isLetter, toUpper)
+import Data.Char (toUpper)
 
 import EstadoJogo
 import Logica
@@ -75,37 +75,41 @@ iniciarJogo palavras maxE
         let palavra = palavras !! idx
         loopJogo (estadoInicial palavra maxE)
 
-loopJogo :: EstadoJogo -> IO ()
-loopJogo estado = do
+exibirEstado :: EstadoJogo -> IO ()
+exibirEstado estado = do
     putStrLn (desenhoForca (erros estado))
     putStrLn ("\nPalavra: " ++ mostrarPainel (palavraSecreta estado) (letrasUsadas estado))
     putStrLn ("Letras usadas: " ++ show (letrasUsadas estado))
     putStrLn ("Erros: " ++ show (erros estado) ++ "/" ++ show (maxErros estado))
 
-    if jogoPerdido estado
-        then putStrLn ("\nPERDEU! A palavra era: " ++ palavraSecreta estado)
-        else if verificarVitoria estado
-            then putStrLn "\nPARABENS! Voce venceu!"
-            else do
-                putStr "\nDigite uma letra: "
-                entrada <- getLine
-                if length entrada /= 1
-                    then do
-                        if not (all isLetter entrada)
-                            then putStrLn "\n>> Digite apenas letras!"
-                            else putStrLn "\n>> Digite apenas UMA letra!"
-                        loopJogo estado
-                    else
-                        case tratarEntrada entrada of
-                            Nothing ->
-                                loopJogo estado
+loopJogo :: EstadoJogo -> IO ()
+loopJogo estado = do
+    exibirEstado estado
+    case statusJogo estado of
+        Perdido ->
+            putStrLn ("\nPERDEU! A palavra era: " ++ palavraSecreta estado)
 
-                            Just letra
-                                | not (isLetter letra) -> do
-                                    putStrLn "\n>> Digite apenas letras!"
-                                    loopJogo estado
-                                | otherwise ->
-                                    loopJogo (processarJogada letra estado)
+        Venceu ->
+            putStrLn "\nPARABENS! Voce venceu!"
+
+        EmAndamento ->
+            processarTurno estado
+
+processarTurno :: EstadoJogo -> IO ()
+processarTurno estado = do
+    putStr "\nDigite uma letra: "
+    entrada <- getLine
+    case avaliarEntrada entrada of
+        EntradaInvalida msg -> do
+            putStrLn msg
+            loopJogo estado
+
+        IgnorarEntrada ->
+            loopJogo estado
+
+        JogadaValida letra ->
+            loopJogo (processarJogada letra estado)
+
 
 -- === LOGICA DO MODO MULTIJOGADOR ===
 menuMultijogador :: IO ()
