@@ -56,4 +56,6 @@ Jogo da Forca é um sistema interativo no terminal que permite ao usuário tenta
 *   `app\Main.hs`: Ponto de entrada e controle do fluxo do jogo.
 *   `app\Logica.hs`: Funções puras de validação e estado do jogo.
 *   `app\Arquivo.hs`: Manipulação de leitura do arquivo CSV.
+*   `app/EstadoJogo.hs`: Define e centraliza o estado do jogo de forma imutável.
+*   `app/Normalizacao.hs`: Normalização de caracteres (acentos e `ç`) para comparação das entradas.
 *   `palavras.csv`: Banco de dados das palavras.
