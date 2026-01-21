@@ -43,8 +43,8 @@ exibirInstrucoes = do
    putStrLn "2. A cada rodada, digite uma letra."
    putStrLn "3. Se a letra estiver na palavra, ela será revelada."
    putStrLn "4. Se errar, uma parte do corpo será desenhada."
-   putStrLn "5. No modo FÁCIL você tem 7 chances."
-   putStrLn "6. No modo DIFÍCIL você tem 5 chances."
+   putStrLn "5. No modo FÁCIL, você pode errar até 7 vezes."
+   putStrLn "6. No modo DIFÍCIL, você pode errar até 5 vezes."
    putStrLn "============================================\n"
    putStrLn "Pressione Enter para voltar ao menu..."
    _ <- getLine -- Espera o usuário apertar Enter
