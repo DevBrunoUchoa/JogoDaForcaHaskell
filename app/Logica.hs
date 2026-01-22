@@ -3,6 +3,7 @@ module Logica where
 import EstadoJogo
 import Normalizacao
 import Data.Char (isLetter)
+import Data.List (intersperse)
 
 
 data ResultadoEntrada
@@ -16,11 +17,11 @@ temLetra letra palavra =
 
 mostrarPainel :: String -> [Char] -> String
 mostrarPainel palavra letrasDescobertas =
-    [ if normalizarChar x `elem` map normalizarChar letrasDescobertas
-        then x
-        else '_'
-    | x <- palavra
-    ]
+    intersperse ' ' [ if normalizarChar x `elem` map normalizarChar letrasDescobertas
+                        then x
+                        else '_'
+                    | x <- palavra
+                    ]
 
 verificarVitoria :: EstadoJogo -> Bool
 verificarVitoria estado =
