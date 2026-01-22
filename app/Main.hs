@@ -51,7 +51,7 @@ exibirInstrucoes = do
    return ()
 
 imprimirDivisor :: IO()
-imprimirDivisor = putStrLn "\n------------------------------------"
+imprimirDivisor = putStrLn "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n-----------------------------------------------------------"
 
 menuDificuldade :: IO ()
 menuDificuldade = do
@@ -78,17 +78,23 @@ iniciarJogo palavras maxE
         let palavra = palavras !! idx
         loopJogo (estadoInicial palavra maxE)
 
-exibirEstado :: EstadoJogo -> IO ()
-exibirEstado estado = do
+exibirEstado :: EstadoJogo -> Maybe String -> IO ()
+exibirEstado estado msgErro = do
     putStrLn (desenhoForca (erros estado) (maxErros estado))
     putStrLn ("\nPalavra: " ++ mostrarPainel (palavraSecreta estado) (letrasUsadas estado))
     putStrLn ("Letras usadas: " ++ show (letrasUsadas estado))
     putStrLn ("Erros: " ++ show (erros estado) ++ "/" ++ show (maxErros estado))
+    case msgErro of
+      Just msg -> putStrLn msg
+      Nothing  -> return ()
 
 loopJogo :: EstadoJogo -> IO ()
-loopJogo estado = do
+loopJogo estado = loopJogoComErro estado Nothing
+
+loopJogoComErro :: EstadoJogo -> Maybe String -> IO ()
+loopJogoComErro estado msgErro = do
     imprimirDivisor
-    exibirEstado estado
+    exibirEstado estado msgErro
     case statusJogo estado of
         Perdido ->
             putStrLn ("\nPERDEU! A palavra era: " ++ palavraSecreta estado)
@@ -97,23 +103,21 @@ loopJogo estado = do
             putStrLn "\nPARABENS! Voce venceu!"
 
         EmAndamento ->
-            processarTurno estado
+            processarTurnoComErro estado
 
-processarTurno :: EstadoJogo -> IO ()
-processarTurno estado = do
+processarTurnoComErro :: EstadoJogo -> IO ()
+processarTurnoComErro estado = do
     putStr "\nDigite uma letra: "
     entrada <- getLine
     case avaliarEntrada entrada of
-        EntradaInvalida msg -> do
-            putStrLn msg
-            loopJogo estado
+        EntradaInvalida msg ->
+            loopJogoComErro estado (Just msg)
 
         IgnorarEntrada ->
-            loopJogo estado
+            loopJogoComErro estado Nothing
 
         JogadaValida letra ->
-            loopJogo (processarJogada letra estado)
-
+            loopJogoComErro (processarJogada letra estado) Nothing
 
 -- === LOGICA DO MODO MULTIJOGADOR ===
 menuMultijogador :: IO ()
@@ -145,3 +149,6 @@ iniciarJogoCustomizado palavra maxE = do
     putStrLn "\n--- JOGO INICIADO ---"
     putStrLn "JOGADOR 2: Tente adivinhar a palavra!"
     loopJogo (estadoInicial palavra maxE)
+
+processarTurno :: EstadoJogo -> IO ()
+processarTurno = processarTurnoComErro
