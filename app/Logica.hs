@@ -76,12 +76,18 @@ entradaInvalida entrada =
     null entrada || not (all isLetter entrada)
 
 
-desenhoForca :: Int -> String
-desenhoForca erros = case erros of
-    0 -> "\n  +---+\n      |\n      |\n========="
-    1 -> "\n  +---+\n  O   |\n      |\n========="
-    2 -> "\n  +---+\n  O   |\n  |   |\n========="
-    3 -> "\n  +---+\n  O   |\n /|   |\n========="
-    4 -> "\n  +---+\n  O   |\n /|\\  |\n========="
-    5 -> "\n  +---+\n  O   |\n /|\\  |\n /    |\n========="
-    _ -> "\n  +---+\n  O   |\n /|\\  |\n / \\  |\n========="
+desenhoForca :: Int -> Int -> String
+desenhoForca errosAtuais maxErrosPermitidos =
+    let 
+        fase = if maxErrosPermitidos == 5 
+               then [0, 1, 2, 4, 5, 6] !! errosAtuais
+               else [0, 1, 2, 3, 4, 5, 6] !! errosAtuais 
+    in case fase of
+        0 -> "\n  +---+\n      |\n      |\n========="
+        1 -> "\n  +---+\n  O   |\n      |\n=========" 
+        2 -> "\n  +---+\n  O   |\n  |   |\n=========" 
+        3 -> "\n  +---+\n  O   |\n /|   |\n=========" 
+        4 -> "\n  +---+\n  O   |\n /|\\  |\n=========" 
+        5 -> "\n  +---+\n  O   |\n /|\\  |\n /    |\n=========" 
+        6 -> "\n  +---+\n  O   |\n /|\\  |\n / \\  |\n=========" 
+        _ -> "\n  +---+\n  O   |\n /|\\  |\n / \\  |\n========="
