@@ -79,9 +79,11 @@ entradaInvalida entrada =
 desenhoForca :: Int -> Int -> String
 desenhoForca errosAtuais maxErrosPermitidos =
     let 
-        fase = if maxErrosPermitidos == 5 
-               then [0, 1, 2, 4, 5, 6] !! errosAtuais
-               else [0, 1, 2, 3, 4, 5, 6] !! errosAtuais 
+        fases = if maxErrosPermitidos == 5
+               then [0, 1, 2, 4, 5, 6]
+               else [0, 1, 2, 3, 4, 5, 6]
+        idx = min errosAtuais (length fases - 1)
+        fase = fases !! idx
     in case fase of
         0 -> "\n  +---+\n      |\n      |\n========="
         1 -> "\n  +---+\n  O   |\n      |\n=========" 
