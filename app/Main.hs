@@ -80,7 +80,7 @@ iniciarJogo palavras maxE
 
 exibirEstado :: EstadoJogo -> IO ()
 exibirEstado estado = do
-    putStrLn (desenhoForca (erros estado))
+    putStrLn (desenhoForca (erros estado) (maxErros estado))
     putStrLn ("\nPalavra: " ++ mostrarPainel (palavraSecreta estado) (letrasUsadas estado))
     putStrLn ("Letras usadas: " ++ show (letrasUsadas estado))
     putStrLn ("Erros: " ++ show (erros estado) ++ "/" ++ show (maxErros estado))
