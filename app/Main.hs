@@ -50,6 +50,9 @@ exibirInstrucoes = do
    _ <- getLine -- Espera o usuário apertar Enter
    return ()
 
+imprimirDivisor :: IO()
+imprimirDivisor = putStrLn "\n------------------------------------"
+
 menuDificuldade :: IO ()
 menuDificuldade = do
     putStrLn "\n--- DIFICULDADE ---"
@@ -84,6 +87,7 @@ exibirEstado estado = do
 
 loopJogo :: EstadoJogo -> IO ()
 loopJogo estado = do
+    imprimirDivisor
     exibirEstado estado
     case statusJogo estado of
         Perdido ->
