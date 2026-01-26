@@ -5,16 +5,6 @@ import Normalizacao
 import Data.Char (isLetter)
 import Data.List (intersperse)
 
-
-data ResultadoEntrada
-    = EntradaInvalida String
-    | JogadaValida Char
-    | IgnorarEntrada
-
-temLetra :: Char -> String -> Bool
-temLetra letra palavra =
-    normalizarChar letra `elem` normalizarString palavra
-
 mostrarPainel :: String -> [Char] -> String
 mostrarPainel palavra letrasDescobertas =
     intersperse ' ' [ if normalizarChar x `elem` map normalizarChar letrasDescobertas
@@ -35,17 +25,13 @@ jogoPerdido :: EstadoJogo -> Bool
 jogoPerdido estado =
     erros estado >= maxErros estado
 
-data StatusJogo = Venceu | Perdido | EmAndamento
+data StatusJogo = Venceu | Perdeu | EmAndamento
 
 statusJogo :: EstadoJogo -> StatusJogo
 statusJogo estado
-    | jogoPerdido estado      = Perdido
+    | jogoPerdido estado      = Perdeu
     | verificarVitoria estado = Venceu
     | otherwise               = EmAndamento
-
-tratarEntrada :: String -> Maybe Char
-tratarEntrada []    = Nothing
-tratarEntrada (c:_) = Just (normalizarChar c)
 
 processarJogada :: Char -> EstadoJogo -> EstadoJogo
 processarJogada letra estado
@@ -70,15 +56,24 @@ avaliarEntrada entrada
     | otherwise =
         maybe IgnorarEntrada JogadaValida (tratarEntrada entrada)
 
+data ResultadoEntrada
+    = EntradaInvalida String
+    | JogadaValida Char
+    | IgnorarEntrada
+
 
 entradaInvalida :: String -> Bool
 entradaInvalida entrada =
     null entrada || not (all isLetter entrada)
 
+tratarEntrada :: String -> Maybe Char
+tratarEntrada []    = Nothing
+tratarEntrada (c:_) = Just (normalizarChar c)
 
 desenhoForca :: Int -> Int -> String
 desenhoForca errosAtuais maxErrosPermitidos =
     let 
+        indicesDesenho :: [Int]
         indicesDesenho = if maxErrosPermitidos == 5
             then     [0, 1, 2, 4, 5, 6]
             else     [0, 1, 2, 3, 4, 5, 5, 6]

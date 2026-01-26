@@ -7,6 +7,7 @@ import Data.Char (toUpper, isLetter)
 import EstadoJogo
 import Logica
 import Arquivo
+import qualified Data.Foldable
 
 main :: IO ()
 main = do
@@ -33,7 +34,7 @@ menuPrincipal = do
             putStrLn "Opcao invalida! Tente novamente."
             menuPrincipal
 
--- Função para exibir as regras
+
 exibirInstrucoes :: IO ()
 exibirInstrucoes = do
    putStrLn "\n========================================"
@@ -47,7 +48,7 @@ exibirInstrucoes = do
    putStrLn "6. No modo DIFÍCIL, você pode errar até 5 vezes."
    putStrLn "============================================\n"
    putStrLn "Pressione Enter para voltar ao menu..."
-   _ <- getLine -- Espera o usuário apertar Enter
+   _ <- getLine 
    return ()
 
 imprimirDivisor :: IO()
@@ -84,9 +85,7 @@ exibirEstado estado msgErro = do
     putStrLn ("\nPalavra: " ++ mostrarPainel (palavraSecreta estado) (letrasUsadas estado))
     putStrLn ("Letras usadas: " ++ show (letrasUsadas estado))
     putStrLn ("Erros: " ++ show (erros estado) ++ "/" ++ show (maxErros estado))
-    case msgErro of
-      Just msg -> putStrLn msg
-      Nothing  -> return ()
+    Data.Foldable.forM_ msgErro putStrLn
 
 loopJogo :: EstadoJogo -> IO ()
 loopJogo estado = loopJogoComErro estado Nothing
@@ -96,7 +95,7 @@ loopJogoComErro estado msgErro = do
     imprimirDivisor
     exibirEstado estado msgErro
     case statusJogo estado of
-        Perdido ->
+        Perdeu ->
             putStrLn ("\nPERDEU! A palavra era: " ++ palavraSecreta estado)
 
         Venceu ->
@@ -119,15 +118,13 @@ processarTurnoComErro estado = do
         JogadaValida letra ->
             loopJogoComErro (processarJogada letra estado) Nothing
 
--- === LOGICA DO MODO MULTIJOGADOR ===
-processarTurno :: EstadoJogo -> IO ()
-processarTurno = processarTurnoComErro
+-- === MODO MULTIJOGADOR ===
 
 validarPalavraSecreta :: String -> Either String String
 validarPalavraSecreta entrada
     | null entrada = Left "A palavra nao pode ser vazia."
     | length entrada < 3 = Left "A palavra deve ter no minimo 3 letras."
-    | any (== ' ') entrada = Left "A palavra nao pode conter espacos."
+    | ' ' `elem` entrada = Left "A palavra nao pode conter espacos."
     | not (all isLetter entrada) = Left "Apenas letras sao permitidas."
     | otherwise = Right (map toUpper entrada)
 
