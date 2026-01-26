@@ -2,7 +2,7 @@ module Logica where
 
 import EstadoJogo
 import Normalizacao
-import Data.Char (isLetter)
+import Data.Char (isLetter, toUpper)
 import Data.List (intersperse)
 
 mostrarPainel :: String -> [Char] -> String
@@ -88,3 +88,11 @@ desenhoForca errosAtuais maxErrosPermitidos =
         5 -> "\n  +---+\n  O   |\n /|\\  |\n /    |\n=========" 
         6 -> "\n  +---+\n  O   |\n /|\\  |\n / \\  |\n=========" 
         _ -> "\n  +---+\n  O   |\n /|\\  |\n / \\  |\n========="
+
+validarPalavraSecreta :: String -> Either String String
+validarPalavraSecreta entrada
+    | null entrada = Left "A palavra nao pode ser vazia."
+    | length entrada < 3 = Left "A palavra deve ter no minimo 3 letras."
+    | ' ' `elem` entrada = Left "A palavra nao pode conter espacos."
+    | not (all isLetter entrada) = Left "Apenas letras sao permitidas."
+    | otherwise = Right (map toUpper entrada)

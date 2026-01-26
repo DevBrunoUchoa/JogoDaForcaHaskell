@@ -2,7 +2,6 @@ module Main where
 
 import System.IO
 import System.Random (randomRIO)
-import Data.Char (toUpper, isLetter)
 
 import EstadoJogo
 import Logica
@@ -119,14 +118,6 @@ processarTurnoComErro estado = do
             loopJogoComErro (processarJogada letra estado) Nothing
 
 -- === MODO MULTIJOGADOR ===
-
-validarPalavraSecreta :: String -> Either String String
-validarPalavraSecreta entrada
-    | null entrada = Left "A palavra nao pode ser vazia."
-    | length entrada < 3 = Left "A palavra deve ter no minimo 3 letras."
-    | ' ' `elem` entrada = Left "A palavra nao pode conter espacos."
-    | not (all isLetter entrada) = Left "Apenas letras sao permitidas."
-    | otherwise = Right (map toUpper entrada)
 
 menuMultijogador :: IO ()
 menuMultijogador = do
